@@ -48,7 +48,8 @@ $tweetsAll = mysqli_fetch_all($res3, MYSQLI_ASSOC); // Cambiado a mysqli_fetch_a
 </head>
 <body>
 
-<h1><?= htmlspecialchars($username) ?></h1>
+<h1><a href="profile.php?id=<?= $user_id ?>" style="text-decoration: none; color: inherit;"><?= htmlspecialchars($username) ?></a></h1>
+
 
 <!-- Formulario para nuevo tweet (publicación) -->
 <form method="POST" action="">
@@ -56,12 +57,23 @@ $tweetsAll = mysqli_fetch_all($res3, MYSQLI_ASSOC); // Cambiado a mysqli_fetch_a
     <button type="submit">Publicar Tweet</button>
 </form>
 
+<!-- Botón para ver las personas que el usuario sigue -->
+<form method="GET" action="following.php">
+    <input type="hidden" name="id" value="<?= $user_id ?>">
+    <button type="submit">Siguiendo</button>
+</form>
+
+<form method="GET" action="followers.php">
+    <input type="hidden" name="id" value="<?= $user_id ?>">
+    <button type="submit">Seguidores</button>
+</form>
+
 <h2>Tweets de personas que sigues:</h2>
 <?php if (count($tweetsFollow) > 0): ?>
     <ul>
         <?php foreach ($tweetsFollow as $tweet): ?>
             <li>
-                <a href="perfil.php?id=<?= $tweet['userId'] ?>"><?= htmlspecialchars($tweet['username']) ?></a>: <?= htmlspecialchars($tweet['text']) ?>
+                <a href="profile.php?id=<?= $tweet['userId'] ?>"><?= htmlspecialchars($tweet['username']) ?></a>: <?= htmlspecialchars($tweet['text']) ?>
                 <em>(<?= htmlspecialchars($tweet['createDate']) ?>)</em>
             </li>
         <?php endforeach; ?>
@@ -74,7 +86,7 @@ $tweetsAll = mysqli_fetch_all($res3, MYSQLI_ASSOC); // Cambiado a mysqli_fetch_a
 <ul>
     <?php foreach ($tweetsAll as $tweet): ?>
         <li>
-            <a href="perfil.php?id=<?= $tweet['userId'] ?>"><?= htmlspecialchars($tweet['username']) ?></a>: <?= htmlspecialchars($tweet['text']) ?>
+            <a href="profile.php?id=<?= $tweet['userId'] ?>"><?= htmlspecialchars($tweet['username']) ?></a>: <?= htmlspecialchars($tweet['text']) ?>
             <em>(<?= htmlspecialchars($tweet['createDate']) ?>)</em>
         </li>
     <?php endforeach; ?>

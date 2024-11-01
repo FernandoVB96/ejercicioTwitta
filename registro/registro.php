@@ -3,7 +3,6 @@
 if (isset($_POST["submit"])) {
     require_once("../connection/connection.php");
 
-    //Recoger los datos
     $username = isset($_POST["username"]) ? mysqli_real_escape_string($connect, $_POST["username"]) : false;
     $email = isset($_POST["email"]) ? mysqli_real_escape_string($connect, trim($_POST["email"])) : false;
     $pass = isset($_POST["password"]) ? mysqli_real_escape_string($connect, $_POST["password"]) : false;
@@ -11,7 +10,6 @@ if (isset($_POST["submit"])) {
 
 
     $arrayErrores = array();
-    //Hacemos validadores necesarios
     if (!empty($username) && !is_numeric($username)) {
         $usernameValidado = true;
     } else {

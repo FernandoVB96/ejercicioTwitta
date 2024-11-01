@@ -109,7 +109,6 @@ if (isset($_POST['update_description'])) {
             <p>Email: <?= htmlspecialchars($userInfo['email']) ?></p>
             <p>Descripción: <?= htmlspecialchars($userInfo['description']) ?></p>
 
-            <!-- Si el usuario logueado está viendo su propio perfil, permitir editar la descripción -->
             <?php if ($current_user_id == $user_id): ?>
                 <h2 class="text-success">Editar Descripción</h2>
                 <form method="POST" action="" class="mb-4">
@@ -120,8 +119,7 @@ if (isset($_POST['update_description'])) {
                 </form>
             <?php endif; ?>
 
-            <!-- Botón para seguir o dejar de seguir -->
-            <?php if ($current_user_id != $user_id): // Solo mostrar el botón si no es el propio usuario ?>
+            <?php if ($current_user_id != $user_id):?>
                 <form method="POST" action="" class="mb-4">
                     <?php if (!$isFollowing): ?>
                         <button type="submit" name="follow" class="btn btn-success">Seguir</button>

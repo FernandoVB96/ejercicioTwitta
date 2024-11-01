@@ -1,7 +1,6 @@
 <?php
 require_once("../connection/connection.php");
 
-// Verificar si el usuario está logueado
 if (!isset($_SESSION["user"])) {
     header("Location: ../index.php");
     exit();

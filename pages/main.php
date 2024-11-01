@@ -9,7 +9,6 @@ if (!isset($_SESSION["user"])) {
 $user_id = $_SESSION["user"]["id"];
 $username = $_SESSION["user"]["username"];
 
-// Manejar el envío de un nuevo tweet (publicación)
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["text"])) {
     $tweet = trim($_POST["text"]);
 
@@ -71,7 +70,7 @@ $tweetsAll = mysqli_fetch_all($res3, MYSQLI_ASSOC);
                         <input type="hidden" name="id" value="<?= $user_id ?>">
                         <button type="submit" class="btn btn-success w-100">Seguidores</button>
                     </form>
-                    <!-- Agregar botón de Perfil aquí -->
+
                     <form method="GET" action="profile.php" class="mb-3">
                         <input type="hidden" name="id" value="<?= $user_id ?>">
                         <button type="submit" class="btn btn-secondary mt-3 w-100">Perfil</button>
@@ -79,9 +78,8 @@ $tweetsAll = mysqli_fetch_all($res3, MYSQLI_ASSOC);
                 </div>
             </nav>
 
-            <main class="col-md-11 col-lg-10 px-4 mt-3"> <!-- Agregado margen superior aquí -->
+            <main class="col-md-11 col-lg-10 px-4 mt-3">
                 <div class="container text-center mb-4">
-                    <!-- Formulario para nuevo tweet (publicación) -->
                     <form method="POST" action="" class="mx-auto" style="max-width: 400px;">
                         <div class="mb-3">
                             <textarea name="text" required class="form-control" placeholder="Escribe tu tweet aquí..." rows="3"></textarea>

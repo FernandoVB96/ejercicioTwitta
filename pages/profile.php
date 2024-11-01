@@ -53,10 +53,8 @@ if (isset($_POST['follow'])) {
 // Manejar la actualización de la descripción
 if (isset($_POST['update_description'])) {
     $newDescription = trim($_POST['description']);
-
     // Escapar la entrada para evitar inyección SQL
     $newDescription = mysqli_real_escape_string($connect, $newDescription);
-
     // Consulta SQL con la variable concatenada
     $sqlUpdate = "UPDATE users SET description = '$newDescription' WHERE id = $current_user_id";
     $res = mysqli_query($connect, $sqlUpdate);
@@ -68,7 +66,6 @@ if (isset($_POST['update_description'])) {
         echo "Error al actualizar la descripción: " . mysqli_error($connect);
     }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -76,59 +73,79 @@ if (isset($_POST['update_description'])) {
 <head>
     <meta charset="UTF-8">
     <title>Perfil de <?= htmlspecialchars($userInfo['username']) ?></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" 
+          integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
 </head>
-<body>
+<body style="background-color: #e9f5e9;">
 
-<h1>Perfil de <?= htmlspecialchars($userInfo['username']) ?></h1>
-<p>Email: <?= htmlspecialchars($userInfo['email']) ?></p>
-<p>Descripción: <?= htmlspecialchars($userInfo['description']) ?></p>
+<nav class="navbar navbar-expand-lg sticky-top" style="background-color: #c3e6cb;">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="main.php">
+            <img src="../img/bird_logo_transparent-removebg-preview.png" alt="Logo" style="width: 50px;" class="me-2">
+        </a>
+        <h2 class="text-success mx-auto mb-0">Perfil de <?= htmlspecialchars($userInfo['username']) ?></h2>
+        <a href="../session/logout.php" class="btn btn-danger btn-sm">Cerrar sesión</a>
+    </div>
+</nav>
 
-<!-- Si el usuario logueado está viendo su propio perfil, permitir editar la descripción -->
-<?php if ($current_user_id == $user_id): ?>
-    <h2>Editar Descripción</h2>
-    <form method="POST" action="">
-        <textarea name="description" required placeholder="Nueva descripción"><?= htmlspecialchars($userInfo['description']) ?></textarea>
-        <button type="submit" name="update_description">Actualizar</button>
-    </form>
-<?php endif; ?>
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-1 d-none d-md-block" style="background-color: #c3e6cb; height: 100vh;">
+            <div class="position-sticky">
+                <form method="GET" action="following.php" class="mb-3">
+                    <input type="hidden" name="id" value="<?= $user_id ?>">
+                    <button type="submit" class="btn btn-success w-100">Seguidos</button>
+                </form>
+                <form method="GET" action="followers.php" class="mb-3">
+                    <input type="hidden" name="id" value="<?= $user_id ?>">
+                    <button type="submit" class="btn btn-success w-100">Seguidores</button>
+                </form>
+                <a href="main.php" class="btn btn-secondary mt-3 w-100">Volver al inicio</a>
+            </div>
+        </nav>
 
-<form method="GET" action="following.php">
-    <input type="hidden" name="id" value="<?= $user_id ?>">
-    <button type="submit">Seguidos</button>
-</form>
+        <main class="col-md-11 col-lg-10 px-4 mt-3">
+            <h1 class="text-success">Perfil de <?= htmlspecialchars($userInfo['username']) ?></h1>
+            <p>Email: <?= htmlspecialchars($userInfo['email']) ?></p>
+            <p>Descripción: <?= htmlspecialchars($userInfo['description']) ?></p>
 
-<form method="GET" action="followers.php">
-    <input type="hidden" name="id" value="<?= $user_id ?>">
-    <button type="submit">Seguidores</button>
-</form>
+            <!-- Si el usuario logueado está viendo su propio perfil, permitir editar la descripción -->
+            <?php if ($current_user_id == $user_id): ?>
+                <h2 class="text-success">Editar Descripción</h2>
+                <form method="POST" action="" class="mb-4">
+                    <div class="mb-3">
+                        <textarea name="description" required class="form-control" placeholder="Nueva descripción"><?= htmlspecialchars($userInfo['description']) ?></textarea>
+                    </div>
+                    <button type="submit" name="update_description" class="btn btn-success">Actualizar</button>
+                </form>
+            <?php endif; ?>
 
-<!-- Botón para seguir o dejar de seguir -->
-<?php if ($current_user_id != $user_id): // Solo mostrar el botón si no es el propio usuario ?>
-    <form method="POST" action="">
-        <?php if (!$isFollowing): ?>
-            <button type="submit" name="follow">Seguir</button>
-        <?php else: ?>
-            <button type="submit" name="unfollow">Dejar de seguir</button>
-        <?php endif; ?>
-    </form>
-<?php endif; ?>
+            <!-- Botón para seguir o dejar de seguir -->
+            <?php if ($current_user_id != $user_id): // Solo mostrar el botón si no es el propio usuario ?>
+                <form method="POST" action="" class="mb-4">
+                    <?php if (!$isFollowing): ?>
+                        <button type="submit" name="follow" class="btn btn-success">Seguir</button>
+                    <?php else: ?>
+                        <button type="submit" name="unfollow" class="btn btn-danger">Dejar de seguir</button>
+                    <?php endif; ?>
+                </form>
+            <?php endif; ?>
 
-<h2>Tweets de <?= htmlspecialchars($userInfo['username']) ?>:</h2>
-<?php if (count($tweets) > 0): ?>
-    <ul>
-        <?php foreach ($tweets as $tweet): ?>
-            <li>
-                <?= htmlspecialchars($tweet['text']) ?> <em>(<?= htmlspecialchars($tweet['createDate']) ?>)</em>
-            </li>
-        <?php endforeach; ?>
-    </ul>
-<?php else: ?>
-    <p>Este usuario no ha publicado ningún tweet.</p>
-<?php endif; ?>
-
-<a href="main.php">Volver al inicio</a>
-
-<a href="../session/logout.php">Cerrar sesión</a>
+            <h2 class="text-success">Tweets de <?= htmlspecialchars($userInfo['username']) ?>:</h2>
+            <?php if (count($tweets) > 0): ?>
+                <ul class="list-group">
+                    <?php foreach ($tweets as $tweet): ?>
+                        <li class="list-group-item">
+                            <?= htmlspecialchars($tweet['text']) ?> <em>(<?= htmlspecialchars($tweet['createDate']) ?>)</em>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php else: ?>
+                <p>Este usuario no ha publicado ningún tweet.</p>
+            <?php endif; ?>
+        </main>
+    </div>
+</div>
 
 </body>
 </html>
